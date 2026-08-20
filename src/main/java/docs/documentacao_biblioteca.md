@@ -8,7 +8,7 @@
 | **Disciplina** | Engenharia de Software |
 | **Instituição** | Faculdade Senai - Fatesg |
 | **Versão** | 1.0 |
-| **Data** | 17/08/2026 |
+| **Data** | 20/08/2026 |
 | **Status** | Em desenvolvimento |
 
 ---
@@ -196,7 +196,7 @@ O sistema deve responder às operações realizadas pelo bibliotecário em até 
 
 | Versão | Data | Alteração | Autor |
 |---|---|---|---|
-| 0.1 | 17/08/2026 | Documento inicial. | Lucas De Montaigne |
+| 0.1 | 20/08/2026 | Documento inicial. | Lucas De Montaigne |
 
 ---
 
