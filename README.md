@@ -51,11 +51,11 @@ The project is being developed with a focus on **Object-Oriented Programming (OO
 
 ### Português
 
-[Documentação do Projeto](src/main/java/docs/documentacao_biblioteca.md.crdownload)
+[Documentação do Projeto](src/main/java/docs/documentacao_biblioteca.md)
 
 ### English
 
-[Project Documentation](src/main/java/docs/library_documentation_en.md.crdownload)
+[Project Documentation](src/main/java/docs/library_documentation_en.md)
 
 ---
 
