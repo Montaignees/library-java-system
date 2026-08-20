@@ -8,7 +8,7 @@
 | **Course** | Software Engineering |
 | **Institution** | Faculdade Senai - Fatesg |
 | **Version** | 1.0 |
-| **Date** | 08/17/2026 |
+| **Date** | 20/08/2026 |
 | **Status** | In Development |
 
 ---
@@ -196,7 +196,7 @@ The system must respond to operations performed by the librarian within 1 second
 
 | Version | Date | Change | Author |
 |---|---|---|---|
-| 0.1 | 08/17/2026 | Initial document. | Lucas De Montaigne |
+| 0.1 | 20/08/2026 | Initial document. | Lucas De Montaigne |
 
 ---
 
