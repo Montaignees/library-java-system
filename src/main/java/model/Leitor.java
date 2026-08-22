@@ -7,13 +7,17 @@ public class Leitor {
     private String email;
     private String cpf;
 
-
+    //Construtor
     public Leitor(String nome, String telefone, String email, String cpf) {
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
         this.cpf = cpf;
     }
+
+    //Metodos
+
+
 
     //getters
     public String getNome() {
