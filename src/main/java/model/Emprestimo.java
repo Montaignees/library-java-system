@@ -4,22 +4,22 @@ import java.time.LocalDate;
 
 public class Emprestimo {
 
-    private int leitor;
+    private Leitor leitor;
+    private Livro livro;
     private LocalDate dataEmprestimo;
     private LocalDate dataLimite;
     private LocalDate dataDevolucao;
 
-    public Emprestimo(int leitor) {
+    public Emprestimo(Leitor leitor, Livro livro) {
         this.leitor = leitor;
+        this.livro = livro;
         this.dataEmprestimo = LocalDate.now();
         this.dataLimite = dataEmprestimo.plusDays(28);
         this.dataDevolucao = null;
-
-
     }
 
     public void devolver() {
-        dataDevolucao = LocalDate.now();
+        this.dataDevolucao = LocalDate.now();
     }
 
     public boolean estaAtrasado() {
@@ -30,9 +30,14 @@ public class Emprestimo {
         return LocalDate.now().isAfter(dataLimite);
     }
 
-    //Getters
-    public int getLeitor() {
+    // Getters
+
+    public Leitor getLeitor() {
         return leitor;
+    }
+
+    public Livro getLivro() {
+        return livro;
     }
 
     public LocalDate getDataEmprestimo() {
@@ -46,20 +51,4 @@ public class Emprestimo {
     public LocalDate getDataDevolucao() {
         return dataDevolucao;
     }
-
-    //Setters
-
-    public void setLeitor(int leitor) {
-        this.leitor = leitor;
-    }
-
-    public void setDataEmprestimo(LocalDate dataEmprestimo) {
-        this.dataEmprestimo = dataEmprestimo;
-    }
-
-    public void setDataLimite(LocalDate dataLimite) {
-        this.dataLimite = dataLimite;
-    }
-
-
 }
