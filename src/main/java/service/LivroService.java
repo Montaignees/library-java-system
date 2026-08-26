@@ -1,6 +1,7 @@
 package service;
 
 import model.Livro;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class LivroService {
         return null;
     }
 
-    public List<Livro> listarLivros() {
+    public List<Livro> getLivros() {
         return livros;
     }
 
@@ -44,4 +45,39 @@ public class LivroService {
         livroAtual.setExemplares(livroAtual.getExemplares() + exemplares);
         return ResultadoOperacao.SUCESSO;
     }
+
+    public ResultadoOperacao alterarTitulo(String isbn, String titulo) {
+        Livro livroAtual = buscarLivro(isbn);
+
+        if (livroAtual == null) {
+            return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
+        }
+
+        livroAtual.setTitulo(titulo);
+        return ResultadoOperacao.SUCESSO;
+    }
+
+    public ResultadoOperacao alterarAutor(String isbn, String autor) {
+        Livro livroAtual = buscarLivro(isbn);
+
+        if (livroAtual == null) {
+            return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
+        }
+
+        livroAtual.setAutor(autor);
+        return ResultadoOperacao.SUCESSO;
+    }
+
+    public ResultadoOperacao alterarCategoria(String isbn, String categoria) {
+        Livro livroAtual = buscarLivro(isbn);
+
+        if (livroAtual == null) {
+            return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
+        }
+
+        livroAtual.setCategoria(categoria);
+        return ResultadoOperacao.SUCESSO;
+    }
+
+
 }
