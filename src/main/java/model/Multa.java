@@ -1,4 +1,5 @@
 package model;
+
 import java.time.LocalDate;
 
 public class Multa {
@@ -14,7 +15,6 @@ public class Multa {
     }
 
     //métodos
-
     public void pagar() {
         pago = true;
     }
@@ -34,7 +34,6 @@ public class Multa {
     }
 
     //Setters
-
     public void setValor(double valor) {
         this.valor = valor;
     }

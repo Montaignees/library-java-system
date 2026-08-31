@@ -12,6 +12,7 @@ public class LeitorService {
         LEITOR_NAO_ENCONTRADO,
 
     }
+
     private List<Leitor> leitores = new ArrayList<>();
 
     public void cadastrarLeitor(Leitor leitor) {

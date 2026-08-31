@@ -18,7 +18,6 @@ public class Leitor {
     //Metodos
 
 
-
     //getters
     public String getNome() {
         return nome;
