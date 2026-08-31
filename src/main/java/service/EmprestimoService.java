@@ -66,6 +66,9 @@ public class EmprestimoService {
             return ResultadoOperacao.LIMITE_ATINGIDO;
         }
 
+
+        //add regra de multa
+
         Emprestimo emprestimo = new Emprestimo(leitor, livro, proximoId);
         emprestimos.add(emprestimo);
 

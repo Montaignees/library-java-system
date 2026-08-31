@@ -1,7 +1,6 @@
 package service;
 
 import model.Leitor;
-import model.Livro;
 
 import java.util.ArrayList;
 import java.util.List;
