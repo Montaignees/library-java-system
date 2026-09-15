@@ -106,15 +106,19 @@ public class Menu {
     private void buscarLivro() {
         cabecalho("BUSCAR LIVRO");
 
-        String isbn = entrada("ISBN");
-        Livro livro = livroService.buscarLivro(isbn);
+        String titulo = entrada("Título");
+        List<Livro> livros = livroService.buscarPorTitulo(titulo);
 
-        if (livro == null) {
+        if (livros.isEmpty()) {
             mensagem("LIVRO NÃO ENCONTRADO");
             return;
         }
 
-        exibirLivro(livro);
+        Livro livro = selecionarLivro(livros);
+
+        if (livro != null) {
+            exibirLivro(livro);
+        }
     }
 
     private void listarLivros() {
@@ -135,14 +139,22 @@ public class Menu {
     private void adicionarExemplares() {
         cabecalho("ADICIONAR EXEMPLARES");
 
-        String isbn = entrada("ISBN");
+        String titulo = entrada("Título");
+        List<Livro> livros = livroService.buscarPorTitulo(titulo);
+
+        if (livros.isEmpty()) {
+            mensagem("LIVRO NÃO ENCONTRADO");
+            return;
+        }
+
+        Livro livro = selecionarLivro(livros);
 
         System.out.print("Quantidade: ");
         int quantidade = scanner.nextInt();
         scanner.nextLine();
 
         LivroService.ResultadoOperacao resultado =
-                livroService.addExemplares(isbn, quantidade);
+                livroService.addExemplares(livro.getIsbn(), quantidade);
 
         if (resultado == LivroService.ResultadoOperacao.SUCESSO) {
             mensagem("EXEMPLARES ADICIONADOS COM SUCESSO");
@@ -161,7 +173,7 @@ public class Menu {
         String email = entrada("E-mail");
         String cpf = entrada("CPF");
 
-        if (leitorService.buscarLeitor(cpf) != null) {
+        if (leitorService.buscarPorCpf(cpf) != null) {
             mensagem("CPF JÁ CADASTRADO");
             return;
         }
@@ -176,15 +188,19 @@ public class Menu {
     private void buscarLeitor() {
         cabecalho("BUSCAR LEITOR");
 
-        String cpf = entrada("CPF");
-        Leitor leitor = leitorService.buscarLeitor(cpf);
+        String nome = entrada("Nome");
+        List<Leitor> leitores = leitorService.buscarPorNome(nome);
 
-        if (leitor == null) {
+        if (leitores.isEmpty()) {
             mensagem("LEITOR NÃO ENCONTRADO");
             return;
         }
 
-        exibirLeitor(leitor);
+        Leitor leitor = selecionarLeitor(leitores);
+
+        if (leitor != null) {
+            exibirLeitor(leitor);
+        }
     }
 
     private void realizarEmprestimo() {
@@ -194,7 +210,7 @@ public class Menu {
         String cpf = entrada("CPF do leitor");
 
         Livro livro = livroService.buscarLivro(isbn);
-        Leitor leitor = leitorService.buscarLeitor(cpf);
+        Leitor leitor = leitorService.buscarPorCpf(cpf);
 
         if (livro == null) {
             mensagem("LIVRO NÃO ENCONTRADO");
@@ -263,7 +279,7 @@ public class Menu {
 
         String cpf = entrada("CPF");
 
-        if (leitorService.buscarLeitor(cpf) == null) {
+        if (leitorService.buscarPorCpf(cpf) == null) {
             mensagem("LEITOR NÃO ENCONTRADO");
             return;
         }
@@ -316,6 +332,34 @@ public class Menu {
         }
     }
 
+    private Livro selecionarLivro(List<Livro> livros) {
+        System.out.println("Selecione um livro:");
+
+        for (int i = 0; i < livros.size(); i++) {
+            System.out.println("[" + (i + 1) + "] " + livros.get(i).getTitulo());
+        }
+
+        System.out.print("Opção: ");
+        int opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        return livroService.selecionarLivro(livros, opcao - 1);
+    }
+
+    private Leitor selecionarLeitor(List<Leitor> leitores) {
+        System.out.println("Selecione um leitor:");
+
+        for (int i = 0; i < leitores.size(); i++) {
+            System.out.println("[" + (i + 1) + "] " + leitores.get(i).getNome());
+        }
+
+        System.out.print("Opção: ");
+        int opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        return leitorService.selecionarLeitor(leitores, opcao - 1);
+    }
+
     private void exibirLivro(Livro livro) {
         caixa("LIVRO",
                 "Título: " + livro.getTitulo(),
@@ -349,6 +393,8 @@ public class Menu {
     private void mensagem(String texto) {
         caixa(texto);
     }
+
+    
 
     //Caixas
 

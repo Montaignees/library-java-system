@@ -28,6 +28,15 @@ public class Main {
                 5
         );
 
+        Livro livro4 = new Livro(
+                "Dom quixote",
+                "miguel de cenvantes",
+                "9788535902778",
+                "Romance",
+                5,
+                5
+        );
+
         Livro livro2 = new Livro(
                 "1984",
                 "George Orwell",
@@ -49,6 +58,7 @@ public class Main {
         livroService.cadastrarLivro(livro1);
         livroService.cadastrarLivro(livro2);
         livroService.cadastrarLivro(livro3);
+        livroService.cadastrarLivro(livro4);
 
         Leitor leitor1 = new Leitor(
                 "Lucas",

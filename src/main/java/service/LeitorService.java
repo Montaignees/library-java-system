@@ -18,7 +18,7 @@ public class LeitorService {
         leitores.add(leitor);
     }
 
-    public Leitor buscarLeitor(String cpf) {
+    public Leitor buscarPorCpf(String cpf) {
         for (Leitor leitor : leitores) {
             if (leitor.getCpf().equals(cpf)) {
                 return leitor;
@@ -28,12 +28,36 @@ public class LeitorService {
         return null;
     }
 
+    public List<Leitor> buscarPorNome(String nome) {
+        List<Leitor> resultados = new ArrayList<>();
+
+        for (Leitor leitor : leitores) {
+            if (leitor.getNome().toLowerCase().contains(nome.toLowerCase())) {
+                resultados.add(leitor);
+            }
+        }
+
+        return resultados;
+    }
+
+    public Leitor selecionarLeitor(List<Leitor> leitores, int indice) {
+        if (leitores == null || leitores.isEmpty()) {
+            return null;
+        }
+
+        if (indice < 0 || indice >= leitores.size()) {
+            return null;
+        }
+
+        return leitores.get(indice);
+    }
+
     public List<Leitor> getLeitores() {
         return leitores;
     }
 
     public ResultadoOperacao alterarNome(String cpf, String nome) {
-        Leitor leitorAtual = buscarLeitor(cpf);
+        Leitor leitorAtual = buscarPorCpf(cpf);
 
         if (leitorAtual == null) {
             return ResultadoOperacao.LEITOR_NAO_ENCONTRADO;
@@ -44,7 +68,7 @@ public class LeitorService {
     }
 
     public ResultadoOperacao alterarTelefone(String cpf, String telefone) {
-        Leitor leitorAtual = buscarLeitor(cpf);
+        Leitor leitorAtual = buscarPorCpf(cpf);
 
         if (leitorAtual == null) {
             return ResultadoOperacao.LEITOR_NAO_ENCONTRADO;
@@ -55,7 +79,7 @@ public class LeitorService {
     }
 
     public ResultadoOperacao alterarEmail(String cpf, String email) {
-        Leitor leitorAtual = buscarLeitor(cpf);
+        Leitor leitorAtual = buscarPorCpf(cpf);
 
         if (leitorAtual == null) {
             return ResultadoOperacao.LEITOR_NAO_ENCONTRADO;

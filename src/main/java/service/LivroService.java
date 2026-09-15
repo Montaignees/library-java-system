@@ -29,6 +29,30 @@ public class LivroService {
         return null;
     }
 
+    public List<Livro> buscarPorTitulo(String titulo) {
+        List<Livro> resultados = new ArrayList<>();
+
+        for (Livro livro : livros) {
+            if (livro.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
+                resultados.add(livro);
+            }
+        }
+
+        return resultados;
+    }
+
+    public Livro selecionarLivro(List<Livro> livros, int indice) {
+        if (livros == null || livros.isEmpty()) {
+            return null;
+        }
+
+        if (indice < 0 || indice >= livros.size()) {
+            return null;
+        }
+
+        return livros.get(indice);
+    }
+
     public List<Livro> getLivros() {
         return livros;
     }
@@ -82,4 +106,6 @@ public class LivroService {
         livroAtual.setCategoria(categoria);
         return ResultadoOperacao.SUCESSO;
     }
+
+
 }
