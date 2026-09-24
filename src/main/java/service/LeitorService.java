@@ -30,7 +30,6 @@ public class LeitorService {
         return null;
     }
 
-    // Motor de busca usado pela interface: permite encontrar pelo nome.
     public List<Leitor> buscarPorNome(String nome) {
         List<Leitor> resultados = new ArrayList<>();
         String busca = nome.toLowerCase(Locale.ROOT);
