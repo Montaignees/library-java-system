@@ -3,13 +3,14 @@ package service;
 import model.Emprestimo;
 import model.Leitor;
 import model.Livro;
+import model.Multa;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EmprestimoService {
 
-    private List<Emprestimo> emprestimos = new ArrayList<>();
+    private final List<Emprestimo> emprestimos = new ArrayList<>();
 
     public enum ResultadoOperacao {
         SUCESSO,
@@ -17,7 +18,6 @@ public class EmprestimoService {
         LEITOR_NAO_ENCONTRADO,
         LIVRO_INDISPONIVEL,
         LIMITE_ATINGIDO,
-        LEITOR_BLOQUEADO,
         EMPRESTIMO_NAO_ENCONTRADO,
         EMPRESTIMO_JA_DEVOLVIDO
     }
@@ -35,14 +35,6 @@ public class EmprestimoService {
         return ativos;
     }
 
-    public ResultadoOperacao estaDentroDoLimite(String cpf) {
-        if (emprestimosAtivos(cpf).size() < 3) {
-            return ResultadoOperacao.SUCESSO;
-        }
-
-        return ResultadoOperacao.LIMITE_ATINGIDO;
-    }
-
     public ResultadoOperacao cadastrarEmprestimo(int id, Livro livro, Leitor leitor) {
         if (livro == null) {
             return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
@@ -56,7 +48,7 @@ public class EmprestimoService {
             return ResultadoOperacao.LIVRO_INDISPONIVEL;
         }
 
-        if (estaDentroDoLimite(leitor.getCpf()) != ResultadoOperacao.SUCESSO) {
+        if (emprestimosAtivos(leitor.getCpf()).size() >= 3) {
             return ResultadoOperacao.LIMITE_ATINGIDO;
         }
 
@@ -90,7 +82,6 @@ public class EmprestimoService {
                 return emprestimo;
             }
         }
-
         return null;
     }
 

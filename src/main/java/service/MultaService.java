@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MultaService {
 
-    private List<Multa> multas = new ArrayList<>();
+    private final List<Multa> multas = new ArrayList<>();
 
     public enum ResultadoOperacao {
         SUCESSO,
@@ -39,29 +39,24 @@ public class MultaService {
             return ResultadoOperacao.EMPRESTIMO_NAO_ATRASADO;
         }
 
-        Multa multa = new Multa(
-                diasAtraso * 1.0,
+        multas.add(new Multa(
+                diasAtraso,
                 LocalDate.now(),
                 false,
                 emprestimo
-        );
-
-        multas.add(multa);
+        ));
 
         return ResultadoOperacao.SUCESSO;
     }
 
-    public long calcularDiasAtraso(Emprestimo emprestimo) {
+    private long calcularDiasAtraso(Emprestimo emprestimo) {
         LocalDate dataFinal = emprestimo.getDataDevolucao();
 
         if (dataFinal == null) {
             dataFinal = LocalDate.now();
         }
 
-        return ChronoUnit.DAYS.between(
-                emprestimo.getDataLimite(),
-                dataFinal
-        );
+        return ChronoUnit.DAYS.between(emprestimo.getDataLimite(), dataFinal);
     }
 
     public Multa buscarMulta(Emprestimo emprestimo) {
@@ -70,24 +65,19 @@ public class MultaService {
                 return multa;
             }
         }
-
         return null;
     }
 
-    public List<Multa> consultarMultas() {
-        return multas;
-    }
-
     public List<Multa> consultarMultasDoLeitor(String cpf) {
-        List<Multa> multasLeitor = new ArrayList<>();
+        List<Multa> resultados = new ArrayList<>();
 
         for (Multa multa : multas) {
             if (multa.getEmprestimo().getLeitor().getCpf().equals(cpf)) {
-                multasLeitor.add(multa);
+                resultados.add(multa);
             }
         }
 
-        return multasLeitor;
+        return resultados;
     }
 
     public ResultadoOperacao pagarMulta(Emprestimo emprestimo) {
@@ -102,7 +92,6 @@ public class MultaService {
         }
 
         multa.pagar();
-
         return ResultadoOperacao.SUCESSO;
     }
 

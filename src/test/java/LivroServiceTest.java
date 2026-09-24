@@ -25,8 +25,4 @@ public class LivroServiceTest {
         assertEquals(1, service.getLivros().size());
     }
 
-    void deveBuscarLivro(int isbn) {
-
-
-    }
 }

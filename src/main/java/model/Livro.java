@@ -34,47 +34,16 @@ public class Livro {
         }
     }
 
-    public String getTitulo() {
-        return titulo;
-    }
+    public String getTitulo() { return titulo; }
+    public String getAutor() { return autor; }
+    public String getIsbn() { return isbn; }
+    public String getCategoria() { return categoria; }
+    public int getExemplares() { return exemplares; }
+    public int getDisponiveis() { return disponiveis; }
 
-    public String getAutor() {
-        return autor;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public int getExemplares() {
-        return exemplares;
-    }
-
-    public int getDisponiveis() {
-        return disponiveis;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public void setExemplares(int exemplares) {
-        this.exemplares = exemplares;
-    }
-
-    public void setDisponiveis(int disponiveis) {
-        this.disponiveis = disponiveis;
-    }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public void setAutor(String autor) { this.autor = autor; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public void setExemplares(int exemplares) { this.exemplares = exemplares; }
+    public void setDisponiveis(int disponiveis) { this.disponiveis = disponiveis; }
 }

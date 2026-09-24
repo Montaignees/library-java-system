@@ -18,50 +18,26 @@ public class Emprestimo {
         this.livro = livro;
         this.dataEmprestimo = LocalDate.now();
         this.dataLimite = dataEmprestimo.plusDays(28);
-        this.dataDevolucao = null;
         this.ativo = true;
     }
 
     public void devolver() {
         if (ativo) {
-            this.dataDevolucao = LocalDate.now();
-            this.ativo = false;
+            dataDevolucao = LocalDate.now();
+            ativo = false;
         }
     }
 
     public boolean estaAtrasado() {
-        if (dataDevolucao != null) {
-            return dataDevolucao.isAfter(dataLimite);
-        }
-
-        return LocalDate.now().isAfter(dataLimite);
+        LocalDate dataReferencia = dataDevolucao != null ? dataDevolucao : LocalDate.now();
+        return dataReferencia.isAfter(dataLimite);
     }
 
-    public Leitor getLeitor() {
-        return leitor;
-    }
-
-    public Livro getLivro() {
-        return livro;
-    }
-
-    public LocalDate getDataEmprestimo() {
-        return dataEmprestimo;
-    }
-
-    public LocalDate getDataLimite() {
-        return dataLimite;
-    }
-
-    public LocalDate getDataDevolucao() {
-        return dataDevolucao;
-    }
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public Leitor getLeitor() { return leitor; }
+    public Livro getLivro() { return livro; }
+    public LocalDate getDataEmprestimo() { return dataEmprestimo; }
+    public LocalDate getDataLimite() { return dataLimite; }
+    public LocalDate getDataDevolucao() { return dataDevolucao; }
+    public boolean isAtivo() { return ativo; }
 }

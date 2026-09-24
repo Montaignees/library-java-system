@@ -28,15 +28,6 @@ public class Main {
                 5
         );
 
-        Livro livro4 = new Livro(
-                "Dom quixote",
-                "miguel de cenvantes",
-                "9788535902778",
-                "Romance",
-                5,
-                5
-        );
-
         Livro livro2 = new Livro(
                 "1984",
                 "George Orwell",
@@ -53,6 +44,15 @@ public class Main {
                 "Fantasia",
                 4,
                 4
+        );
+
+        Livro livro4 = new Livro(
+                "Dom Quixote",
+                "Miguel de Cervantes",
+                "9780060934347",
+                "Romance",
+                5,
+                5
         );
 
         livroService.cadastrarLivro(livro1);
@@ -85,12 +85,7 @@ public class Main {
         leitorService.cadastrarLeitor(leitor2);
         leitorService.cadastrarLeitor(leitor3);
 
-        Emprestimo emprestimo = new Emprestimo(
-                leitor2,
-                livro1,
-                1
-        );
-
+        Emprestimo emprestimo = new Emprestimo(leitor2, livro1, 1);
         emprestimoService.getEmprestimos().add(emprestimo);
 
         Multa multa = new Multa(
@@ -101,7 +96,6 @@ public class Main {
         );
 
         multaService.getMultas().add(multa);
-
 
         Menu menu = new Menu(
                 livroService,

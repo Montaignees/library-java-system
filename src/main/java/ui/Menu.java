@@ -32,19 +32,18 @@ public class Menu {
     }
 
     public void iniciar() {
-
-
         System.out.println(VERDE);
+
         int opcao;
 
         do {
             caixa("SISTEMA DE BIBLIOTECA",
                     "[1]  Cadastrar livro",
-                    "[2]  Buscar livro",
+                    "[2]  Buscar livro por título",
                     "[3]  Listar livros",
                     "[4]  Adicionar exemplares",
                     "[5]  Cadastrar leitor",
-                    "[6]  Buscar leitor",
+                    "[6]  Buscar leitor por nome",
                     "[7]  Realizar empréstimo",
                     "[8]  Realizar devolução",
                     "[9]  Consultar multas",
@@ -90,21 +89,20 @@ public class Menu {
             return;
         }
 
-        if (livroService.buscarLivro(isbn) != null) {
+        if (livroService.buscarPorIsbn(isbn) != null) {
             mensagem("ISBN JÁ CADASTRADO");
             return;
         }
 
-        Livro livro = new Livro(
-                titulo, autor, isbn, categoria, quantidade, quantidade
+        livroService.cadastrarLivro(
+                new Livro(titulo, autor, isbn, categoria, quantidade, quantidade)
         );
 
-        livroService.cadastrarLivro(livro);
         mensagem("LIVRO CADASTRADO COM SUCESSO");
     }
 
     private void buscarLivro() {
-        cabecalho("BUSCAR LIVRO");
+        cabecalho("BUSCAR LIVRO POR TÍTULO");
 
         String titulo = entrada("Título");
         List<Livro> livros = livroService.buscarPorTitulo(titulo);
@@ -131,6 +129,7 @@ public class Menu {
         }
 
         cabecalho("LISTA DE LIVROS (" + livros.size() + ")");
+
         for (Livro livro : livros) {
             exibirLivro(livro);
         }
@@ -149,6 +148,10 @@ public class Menu {
 
         Livro livro = selecionarLivro(livros);
 
+        if (livro == null) {
+            return;
+        }
+
         System.out.print("Quantidade: ");
         int quantidade = scanner.nextInt();
         scanner.nextLine();
@@ -156,12 +159,10 @@ public class Menu {
         LivroService.ResultadoOperacao resultado =
                 livroService.addExemplares(livro.getIsbn(), quantidade);
 
-        if (resultado == LivroService.ResultadoOperacao.SUCESSO) {
-            mensagem("EXEMPLARES ADICIONADOS COM SUCESSO");
-        } else if (resultado == LivroService.ResultadoOperacao.QUANTIDADE_INVALIDA) {
-            mensagem("QUANTIDADE INVÁLIDA");
-        } else {
-            mensagem("LIVRO NÃO ENCONTRADO");
+        switch (resultado) {
+            case SUCESSO -> mensagem("EXEMPLARES ADICIONADOS COM SUCESSO");
+            case QUANTIDADE_INVALIDA -> mensagem("QUANTIDADE INVÁLIDA");
+            default -> mensagem("LIVRO NÃO ENCONTRADO");
         }
     }
 
@@ -173,8 +174,8 @@ public class Menu {
         String email = entrada("E-mail");
         String cpf = entrada("CPF");
 
-        if (leitorService.buscarPorCpf(cpf) != null) {
-            mensagem("CPF JÁ CADASTRADO");
+        if (leitorService.verificarDuplicidade(cpf, email, telefone) != null) {
+            mensagem("LEITOR JÁ CADASTRADO");
             return;
         }
 
@@ -186,7 +187,7 @@ public class Menu {
     }
 
     private void buscarLeitor() {
-        cabecalho("BUSCAR LEITOR");
+        cabecalho("BUSCAR LEITOR POR NOME");
 
         String nome = entrada("Nome");
         List<Leitor> leitores = leitorService.buscarPorNome(nome);
@@ -206,23 +207,30 @@ public class Menu {
     private void realizarEmprestimo() {
         cabecalho("REALIZAR EMPRÉSTIMO");
 
-        String isbn = entrada("ISBN do livro");
-        String cpf = entrada("CPF do leitor");
+        String titulo = entrada("Título do livro");
+        String nome = entrada("Nome do leitor");
 
-        Livro livro = livroService.buscarLivro(isbn);
-        Leitor leitor = leitorService.buscarPorCpf(cpf);
+        List<Livro> livros = livroService.buscarPorTitulo(titulo);
+        List<Leitor> leitores = leitorService.buscarPorNome(nome);
 
-        if (livro == null) {
+        if (livros.isEmpty()) {
             mensagem("LIVRO NÃO ENCONTRADO");
             return;
         }
 
-        if (leitor == null) {
+        if (leitores.isEmpty()) {
             mensagem("LEITOR NÃO ENCONTRADO");
             return;
         }
 
-        if (multaService.calcularDivida(cpf) > 0) {
+        Livro livro = selecionarLivro(livros);
+        Leitor leitor = selecionarLeitor(leitores);
+
+        if (livro == null || leitor == null) {
+            return;
+        }
+
+        if (multaService.calcularDivida(leitor.getCpf()) > 0) {
             mensagem("LEITOR POSSUI MULTA PENDENTE");
             return;
         }
@@ -264,7 +272,6 @@ public class Menu {
 
         if (emprestimo.estaAtrasado()) {
             multaService.criarMulta(emprestimo);
-
             Multa multa = multaService.buscarMulta(emprestimo);
 
             caixa("DEVOLUÇÃO REALIZADA COM ATRASO",
@@ -336,28 +343,41 @@ public class Menu {
         System.out.println("Selecione um livro:");
 
         for (int i = 0; i < livros.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + livros.get(i).getTitulo());
+            System.out.println("[" + (i + 1) + "] "
+                    + livros.get(i).getTitulo()
+                    + " - " + livros.get(i).getIsbn());
         }
 
         System.out.print("Opção: ");
         int opcao = scanner.nextInt();
         scanner.nextLine();
 
-        return livroService.selecionarLivro(livros, opcao - 1);
+        if (opcao < 1 || opcao > livros.size()) {
+            mensagem("OPÇÃO INVÁLIDA");
+            return null;
+        }
+
+        return livros.get(opcao - 1);
     }
 
     private Leitor selecionarLeitor(List<Leitor> leitores) {
         System.out.println("Selecione um leitor:");
 
         for (int i = 0; i < leitores.size(); i++) {
-            System.out.println("[" + (i + 1) + "] " + leitores.get(i).getNome());
+            System.out.println("[" + (i + 1) + "] " + leitores.get(i).getNome()
+                    + " - " + leitores.get(i).getCpf());
         }
 
         System.out.print("Opção: ");
         int opcao = scanner.nextInt();
         scanner.nextLine();
 
-        return leitorService.selecionarLeitor(leitores, opcao - 1);
+        if (opcao < 1 || opcao > leitores.size()) {
+            mensagem("OPÇÃO INVÁLIDA");
+            return null;
+        }
+
+        return leitores.get(opcao - 1);
     }
 
     private void exibirLivro(Livro livro) {
@@ -377,7 +397,8 @@ public class Menu {
                 "Telefone: " + leitor.getTelefone(),
                 "E-mail: " + leitor.getEmail(),
                 "CPF: " + leitor.getCpf(),
-                String.format("Dívida: R$ %.2f", multaService.calcularDivida(leitor.getCpf()))
+                String.format("Dívida: R$ %.2f",
+                        multaService.calcularDivida(leitor.getCpf()))
         );
     }
 
@@ -394,18 +415,14 @@ public class Menu {
         caixa(texto);
     }
 
-    
-
-    //Caixas
-
     private void caixa(String titulo, String... linhas) {
-
         System.out.println();
         System.out.println("┌" + "─".repeat(LARGURA) + "┐");
         System.out.println("│" + centralizar(titulo) + "│");
 
         if (linhas.length > 0) {
             System.out.println("├" + "─".repeat(LARGURA) + "┤");
+
             for (String linha : linhas) {
                 System.out.println("│" + formatarLinha(linha) + "│");
             }
@@ -418,17 +435,21 @@ public class Menu {
         if (texto.length() >= LARGURA) {
             return texto.substring(0, LARGURA);
         }
+
         int espacoTotal = LARGURA - texto.length();
         int esquerda = espacoTotal / 2;
         int direita = espacoTotal - esquerda;
+
         return " ".repeat(esquerda) + texto + " ".repeat(direita);
     }
 
     private String formatarLinha(String texto) {
         String conteudo = " " + texto;
+
         if (conteudo.length() >= LARGURA) {
             return conteudo.substring(0, LARGURA - 1) + " ";
         }
+
         return conteudo + " ".repeat(LARGURA - conteudo.length());
     }
 

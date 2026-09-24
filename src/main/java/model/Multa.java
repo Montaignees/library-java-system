@@ -20,27 +20,9 @@ public class Multa {
         pago = true;
     }
 
-    public double getValor() {
-        return valor;
-    }
+    public double getValor() { return valor; }
+    public LocalDate getDataMulta() { return dataMulta; }
+    public boolean isPago() { return pago; }
+    public Emprestimo getEmprestimo() { return emprestimo; }
 
-    public LocalDate getDataMulta() {
-        return dataMulta;
-    }
-
-    public boolean isPago() {
-        return pago;
-    }
-
-    public Emprestimo getEmprestimo() {
-        return emprestimo;
-    }
-
-    public void setValor(double valor) {
-        this.valor = valor;
-    }
-
-    public void setDataMulta(LocalDate dataMulta) {
-        this.dataMulta = dataMulta;
-    }
 }
