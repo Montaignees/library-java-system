@@ -10,7 +10,7 @@ public class Leitor {
     public Leitor(String nome, String telefone, String email, String cpf) {
         this.nome = nome;
         this.telefone = telefone;
-        this.email = email;
+        setEmail(email);
         setCpf(cpf);
     }
 
@@ -39,18 +39,27 @@ public class Leitor {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+
+        if (!validarEmail(email)) {
+           throw  new IllegalArgumentException("EMAIL INVÁLIDO");
+       }
+       this.email = email;
     }
 
-    //Validação de CPF
+    //Validação de CPFp
     public void setCpf(String cpf) {
-        cpf = filtrarCpf(cpf);
+        try {
+            cpf = filtrarCpf(cpf);
 
-        if (!validarCpf(cpf)) {
-            throw new IllegalArgumentException("CPF inválido.");
+            if (!validarCpf(cpf)) {
+                throw new IllegalArgumentException("CPF inválido.");
+            }
+
+            this.cpf = cpf;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        this.cpf = cpf;
     }
 
     public String filtrarCpf(String cpf) {
@@ -135,5 +144,21 @@ public class Leitor {
     }
 
     // Validação de Email
+
+    public boolean validarEmail(String email) {
+        String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        email = email.trim();
+
+        if (email == null) {
+            return false;
+        }
+
+        if (email.matches(regex)) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
 

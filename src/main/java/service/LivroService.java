@@ -17,28 +17,41 @@ public class LivroService {
     }
 
     public void cadastrarLivro(Livro livro) {
-        livros.add(livro);
+        try {
+            livros.add(livro);
+        } catch (Exception e) {
+            System.out.println("Erro ao cadastrar livro: " + e.getMessage());
+        }
     }
 
     // Busca por ISBN é usada para identificar um livro de forma única.
     public Livro buscarPorIsbn(String isbn) {
-        for (Livro livro : livros) {
-            if (livro.getIsbn().equals(isbn)) {
-                return livro;
+        try {
+            for (Livro livro : livros) {
+                if (livro.getIsbn().equals(isbn)) {
+                    return livro;
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar livro: " + e.getMessage());
         }
+
         return null;
     }
 
-    // Motor de busca usado pela interface: permite encontrar pelo título.
     public List<Livro> buscarPorTitulo(String titulo) {
         List<Livro> resultados = new ArrayList<>();
-        String busca = titulo.toLowerCase(Locale.ROOT);
 
-        for (Livro livro : livros) {
-            if (livro.getTitulo().toLowerCase(Locale.ROOT).contains(busca)) {
-                resultados.add(livro);
+        try {
+            String busca = titulo.toLowerCase(Locale.ROOT);
+
+            for (Livro livro : livros) {
+                if (livro.getTitulo().toLowerCase(Locale.ROOT).contains(busca)) {
+                    resultados.add(livro);
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar por título: " + e.getMessage());
         }
 
         return resultados;
@@ -49,52 +62,76 @@ public class LivroService {
     }
 
     public ResultadoOperacao addExemplares(String isbn, int quantidade) {
-        if (quantidade <= 0) {
+        try {
+            if (quantidade <= 0) {
+                return ResultadoOperacao.QUANTIDADE_INVALIDA;
+            }
+
+            Livro livro = buscarPorIsbn(isbn);
+
+            if (livro == null) {
+                return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
+            }
+
+            livro.setExemplares(livro.getExemplares() + quantidade);
+            livro.setDisponiveis(livro.getDisponiveis() + quantidade);
+
+            return ResultadoOperacao.SUCESSO;
+
+        } catch (Exception e) {
+            System.out.println("Erro ao adicionar exemplares: " + e.getMessage());
             return ResultadoOperacao.QUANTIDADE_INVALIDA;
         }
-
-        Livro livro = buscarPorIsbn(isbn);
-
-        if (livro == null) {
-            return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
-        }
-
-        livro.setExemplares(livro.getExemplares() + quantidade);
-        livro.setDisponiveis(livro.getDisponiveis() + quantidade);
-
-        return ResultadoOperacao.SUCESSO;
     }
 
     public ResultadoOperacao alterarTitulo(String isbn, String titulo) {
-        Livro livro = buscarPorIsbn(isbn);
+        try {
+            Livro livro = buscarPorIsbn(isbn);
 
-        if (livro == null) {
+            if (livro == null) {
+                return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
+            }
+
+            livro.setTitulo(titulo);
+            return ResultadoOperacao.SUCESSO;
+
+        } catch (Exception e) {
+            System.out.println("Erro ao alterar título: " + e.getMessage());
             return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
         }
-
-        livro.setTitulo(titulo);
-        return ResultadoOperacao.SUCESSO;
     }
 
     public ResultadoOperacao alterarAutor(String isbn, String autor) {
-        Livro livro = buscarPorIsbn(isbn);
+        try {
+            Livro livro = buscarPorIsbn(isbn);
 
-        if (livro == null) {
+            if (livro == null) {
+                return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
+            }
+
+            livro.setAutor(autor);
+            return ResultadoOperacao.SUCESSO;
+
+        } catch (Exception e) {
+            System.out.println("Erro ao alterar autor: " + e.getMessage());
             return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
         }
-
-        livro.setAutor(autor);
-        return ResultadoOperacao.SUCESSO;
     }
 
     public ResultadoOperacao alterarCategoria(String isbn, String categoria) {
-        Livro livro = buscarPorIsbn(isbn);
+        try {
+            Livro livro = buscarPorIsbn(isbn);
 
-        if (livro == null) {
+            if (livro == null) {
+                return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
+            }
+
+            livro.setCategoria(categoria);
+            return ResultadoOperacao.SUCESSO;
+
+        } catch (Exception e) {
+            System.out.println("Erro ao alterar categoria: " + e.getMessage());
             return ResultadoOperacao.LIVRO_NAO_ENCONTRADO;
         }
-
-        livro.setCategoria(categoria);
-        return ResultadoOperacao.SUCESSO;
     }
 }

@@ -21,88 +21,122 @@ public class MultaService {
     }
 
     public ResultadoOperacao criarMulta(Emprestimo emprestimo) {
-        if (emprestimo == null) {
+        try {
+            if (emprestimo == null) {
+                return ResultadoOperacao.EMPRESTIMO_NAO_ENCONTRADO;
+            }
+
+            if (!emprestimo.estaAtrasado()) {
+                return ResultadoOperacao.EMPRESTIMO_NAO_ATRASADO;
+            }
+
+            if (buscarMulta(emprestimo) != null) {
+                return ResultadoOperacao.SUCESSO;
+            }
+
+            long diasAtraso = calcularDiasAtraso(emprestimo);
+
+            if (diasAtraso <= 0) {
+                return ResultadoOperacao.EMPRESTIMO_NAO_ATRASADO;
+            }
+
+            multas.add(new Multa(
+                    diasAtraso,
+                    LocalDate.now(),
+                    false,
+                    emprestimo
+            ));
+
+            return ResultadoOperacao.SUCESSO;
+
+        } catch (Exception e) {
+            System.out.println("Erro ao criar multa: " + e.getMessage());
             return ResultadoOperacao.EMPRESTIMO_NAO_ENCONTRADO;
         }
-
-        if (!emprestimo.estaAtrasado()) {
-            return ResultadoOperacao.EMPRESTIMO_NAO_ATRASADO;
-        }
-
-        if (buscarMulta(emprestimo) != null) {
-            return ResultadoOperacao.SUCESSO;
-        }
-
-        long diasAtraso = calcularDiasAtraso(emprestimo);
-
-        if (diasAtraso <= 0) {
-            return ResultadoOperacao.EMPRESTIMO_NAO_ATRASADO;
-        }
-
-        multas.add(new Multa(
-                diasAtraso,
-                LocalDate.now(),
-                false,
-                emprestimo
-        ));
-
-        return ResultadoOperacao.SUCESSO;
     }
 
     private long calcularDiasAtraso(Emprestimo emprestimo) {
-        LocalDate dataFinal = emprestimo.getDataDevolucao();
+        try {
+            LocalDate dataFinal = emprestimo.getDataDevolucao();
 
-        if (dataFinal == null) {
-            dataFinal = LocalDate.now();
+            if (dataFinal == null) {
+                dataFinal = LocalDate.now();
+            }
+
+            return ChronoUnit.DAYS.between(emprestimo.getDataLimite(), dataFinal);
+
+        } catch (Exception e) {
+            System.out.println("Erro ao calcular dias de atraso: " + e.getMessage());
+            return 0;
         }
-
-        return ChronoUnit.DAYS.between(emprestimo.getDataLimite(), dataFinal);
     }
 
     public Multa buscarMulta(Emprestimo emprestimo) {
-        for (Multa multa : multas) {
-            if (multa.getEmprestimo() == emprestimo) {
-                return multa;
+        try {
+            for (Multa multa : multas) {
+                if (multa.getEmprestimo() == emprestimo) {
+                    return multa;
+                }
             }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar multa: " + e.getMessage());
         }
+
         return null;
     }
 
     public List<Multa> consultarMultasDoLeitor(String cpf) {
         List<Multa> resultados = new ArrayList<>();
 
-        for (Multa multa : multas) {
-            if (multa.getEmprestimo().getLeitor().getCpf().equals(cpf)) {
-                resultados.add(multa);
+        try {
+            for (Multa multa : multas) {
+                if (multa.getEmprestimo().getLeitor().getCpf().equals(cpf)) {
+                    resultados.add(multa);
+                }
             }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao consultar multas: " + e.getMessage());
         }
 
         return resultados;
     }
 
     public ResultadoOperacao pagarMulta(Emprestimo emprestimo) {
-        Multa multa = buscarMulta(emprestimo);
+        try {
+            Multa multa = buscarMulta(emprestimo);
 
-        if (multa == null) {
+            if (multa == null) {
+                return ResultadoOperacao.MULTA_NAO_ENCONTRADA;
+            }
+
+            if (multa.isPago()) {
+                return ResultadoOperacao.MULTA_JA_PAGA;
+            }
+
+            multa.pagar();
+            return ResultadoOperacao.SUCESSO;
+
+        } catch (Exception e) {
+            System.out.println("Erro ao pagar multa: " + e.getMessage());
             return ResultadoOperacao.MULTA_NAO_ENCONTRADA;
         }
-
-        if (multa.isPago()) {
-            return ResultadoOperacao.MULTA_JA_PAGA;
-        }
-
-        multa.pagar();
-        return ResultadoOperacao.SUCESSO;
     }
 
     public double calcularDivida(String cpf) {
         double divida = 0;
 
-        for (Multa multa : multas) {
-            if (multa.getEmprestimo().getLeitor().getCpf().equals(cpf)
-                    && !multa.isPago()) {
-                divida += multa.getValor();
+        try {
+            for (Multa multa : multas) {
+                if (multa.getEmprestimo().getLeitor().getCpf().equals(cpf)
+                        && !multa.isPago()) {
+                    divida += multa.getValor();
+                }
             }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao calcular dívida: " + e.getMessage());
         }
 
         return divida;

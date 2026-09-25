@@ -9,6 +9,7 @@ import service.LeitorService;
 import service.LivroService;
 import service.MultaService;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -34,40 +35,49 @@ public class Menu {
     public void iniciar() {
         System.out.println(VERDE);
 
-        int opcao;
+        int opcao = 0;
 
         do {
-            caixa("SISTEMA DE BIBLIOTECA",
-                    "[1]  Cadastrar livro",
-                    "[2]  Buscar livro por título",
-                    "[3]  Listar livros",
-                    "[4]  Adicionar exemplares",
-                    "[5]  Cadastrar leitor",
-                    "[6]  Buscar leitor por nome",
-                    "[7]  Realizar empréstimo",
-                    "[8]  Realizar devolução",
-                    "[9]  Consultar multas",
-                    "[10] Registrar pagamento de multa",
-                    "[0]  Sair"
-            );
+            try {
+                caixa("SISTEMA DE BIBLIOTECA",
+                        "[1]  Cadastrar livro",
+                        "[2]  Buscar livro por título",
+                        "[3]  Listar livros",
+                        "[4]  Adicionar exemplares",
+                        "[5]  Cadastrar leitor",
+                        "[6]  Buscar leitor por nome",
+                        "[7]  Realizar empréstimo",
+                        "[8]  Realizar devolução",
+                        "[9]  Consultar multas",
+                        "[10] Registrar pagamento de multa",
+                        "[0]  Sair"
+                );
 
-            System.out.print("Opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine();
+                System.out.print("Opção: ");
 
-            switch (opcao) {
-                case 1 -> cadastrarLivro();
-                case 2 -> buscarLivro();
-                case 3 -> listarLivros();
-                case 4 -> adicionarExemplares();
-                case 5 -> cadastrarLeitor();
-                case 6 -> buscarLeitor();
-                case 7 -> realizarEmprestimo();
-                case 8 -> realizarDevolucao();
-                case 9 -> consultarMultas();
-                case 10 -> pagarMulta();
-                case 0 -> mensagem("SISTEMA ENCERRADO");
-                default -> mensagem("OPÇÃO INVÁLIDA");
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+
+
+                switch (opcao) {
+                    case 1 -> cadastrarLivro();
+                    case 2 -> buscarLivro();
+                    case 3 -> listarLivros();
+                    case 4 -> adicionarExemplares();
+                    case 5 -> cadastrarLeitor();
+                    case 6 -> buscarLeitor();
+                    case 7 -> realizarEmprestimo();
+                    case 8 -> realizarDevolucao();
+                    case 9 -> consultarMultas();
+                    case 10 -> pagarMulta();
+                    case 0 -> mensagem("SISTEMA ENCERRADO");
+                    default -> mensagem("OPÇÃO INVÁLIDA");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Erro no menu");
+                scanner.nextLine();
+                opcao = -1;
+                iniciar();
             }
         } while (opcao != 0);
     }
@@ -464,4 +474,5 @@ public class Menu {
 
         return maiorId + 1;
     }
+
 }

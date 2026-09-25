@@ -12,11 +12,46 @@ public class Livro {
     public Livro(String titulo, String autor, String isbn, String categoria, int exemplares, int disponiveis) {
         this.titulo = titulo;
         this.autor = autor;
-        this.isbn = isbn;
+        setIsbn(isbn);
         this.categoria = categoria;
         this.exemplares = exemplares;
         this.disponiveis = disponiveis;
     }
+
+    //Validar ISBN
+
+    public String filtrarIsbn(String isbn) {
+        isbn = isbn.replaceAll("[^0-9]", "");
+
+        if (isbn.length() != 13) {
+            return null;
+        }
+
+        return isbn;
+    }
+
+    public boolean calcularIsbn(String isbn) {
+        int soma = 0;
+        int resto = 0;
+
+        for (int i = 0; i < 12; i++) {
+            int numero = Character.getNumericValue(isbn.charAt(i));
+
+            if (i % 2 == 0) {
+                soma += numero;
+            } else {
+                soma += numero * 3;
+            }
+
+            resto = (10 - (soma % 10)) % 10;
+
+        }
+
+        return Character.getNumericValue(isbn.charAt(12)) == resto;
+    }
+
+
+
 
     public boolean temDisponivel() {
         return disponiveis > 0;
@@ -46,4 +81,11 @@ public class Livro {
     public void setCategoria(String categoria) { this.categoria = categoria; }
     public void setExemplares(int exemplares) { this.exemplares = exemplares; }
     public void setDisponiveis(int disponiveis) { this.disponiveis = disponiveis; }
+
+    public void setIsbn(String isbn) {
+        if (!calcularIsbn(isbn)) {
+            throw new IllegalArgumentException("ISBN INVALIDO");
+        }
+        this.isbn = isbn;
+    }
 }

@@ -64,21 +64,21 @@ public class Main {
                 "Lucas",
                 "62999999999",
                 "lucas@email.com",
-                "12345678901"
+                "82789505047"
         );
 
         Leitor leitor2 = new Leitor(
                 "João",
                 "62988888888",
                 "joao@email.com",
-                "23456789012"
+                "69529878001"
         );
 
         Leitor leitor3 = new Leitor(
                 "Maria",
                 "62977777777",
                 "maria@email.com",
-                "34567890123"
+                "24689609047"
         );
 
         leitorService.cadastrarLeitor(leitor1);
