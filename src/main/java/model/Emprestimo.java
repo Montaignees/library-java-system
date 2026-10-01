@@ -13,6 +13,14 @@ public class Emprestimo {
     private boolean ativo;
 
     public Emprestimo(Leitor leitor, Livro livro, int id) {
+        if (leitor == null || livro == null) {
+            throw new IllegalArgumentException("LEITOR E LIVRO SAO OBRIGATORIOS");
+        }
+
+        if (id <= 0) {
+            throw new IllegalArgumentException("ID INVALIDO");
+        }
+
         this.id = id;
         this.leitor = leitor;
         this.livro = livro;
@@ -29,7 +37,9 @@ public class Emprestimo {
     }
 
     public boolean estaAtrasado() {
-        LocalDate dataReferencia = dataDevolucao != null ? dataDevolucao : LocalDate.now();
+        LocalDate dataReferencia =
+                dataDevolucao != null ? dataDevolucao : LocalDate.now();
+
         return dataReferencia.isAfter(dataLimite);
     }
 
